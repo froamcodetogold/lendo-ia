@@ -11,13 +11,13 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-screen flex-col">
       <header className="border-b border-neutral-200 bg-white">
-        <div className="mx-auto flex max-w-4xl items-center px-6 py-5">
+        <div className="mx-auto flex max-w-4xl items-center px-6 py-6">
           <Link
             href="/dashboard"
-            className="flex items-center gap-1.5 text-2xl font-bold tracking-tight"
+            className="flex items-center gap-2 text-4xl font-extrabold tracking-tight"
           >
             Lendo<span className="text-indigo-600">.IA</span>
-            <Sparkles className="size-4 text-amber-500" />
+            <Sparkles className="size-7 text-amber-500" />
           </Link>
         </div>
       </header>
