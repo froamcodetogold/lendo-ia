@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
+import { BookOpen, Sparkles, Flame } from "lucide-react";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { StreakBadge } from "@/components/gamification/streak-badge";
@@ -61,14 +62,56 @@ export default async function DashboardPage() {
           </Link>
         </div>
       ) : (
-        <div className="rounded-xl border border-dashed border-neutral-300 bg-white p-8 text-center">
-          <p className="text-neutral-600">Você ainda não tem uma meta de leitura ativa.</p>
-          <Link
-            href="/onboarding"
-            className="mt-4 inline-block rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-800"
-          >
-            Escolher um livro
-          </Link>
+        <div className="overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+          <div className="border-b border-neutral-100 p-8 text-center">
+            <h2 className="text-xl font-bold">Como o Lendo.IA funciona</h2>
+            <p className="mx-auto mt-2 max-w-md text-sm text-neutral-600">
+              Sem PDF pirata: você lê o livro de verdade, a gente só te ajuda a manter o
+              hábito.
+            </p>
+          </div>
+
+          <div className="grid gap-6 p-8 sm:grid-cols-3">
+            <div className="text-center">
+              <div className="mx-auto flex size-11 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
+                <BookOpen className="size-5" />
+              </div>
+              <p className="mt-3 text-sm font-semibold">1. Escolha um livro</p>
+              <p className="mt-1 text-sm text-neutral-500">
+                Busca o título e diz em quantos dias quer terminar — a gente calcula sua
+                meta diária de páginas.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="mx-auto flex size-11 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                <Sparkles className="size-5" />
+              </div>
+              <p className="mt-3 text-sm font-semibold">2. Check-in com quiz da IA</p>
+              <p className="mt-1 text-sm text-neutral-500">
+                Todo dia que ler, registra até que página chegou e responde um quiz gerado
+                na hora sobre o trecho.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="mx-auto flex size-11 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
+                <Flame className="size-5" />
+              </div>
+              <p className="mt-3 text-sm font-semibold">3. Ganhe XP e mantenha o streak</p>
+              <p className="mt-1 text-sm text-neutral-500">
+                Acumule XP, suba de liga na semana e mantenha sua sequência de dias
+                seguidos lendo.
+              </p>
+            </div>
+          </div>
+
+          <div className="border-t border-neutral-100 p-6 text-center">
+            <Link
+              href="/onboarding"
+              className="inline-block rounded-lg bg-neutral-900 px-5 py-2.5 font-medium text-white hover:bg-neutral-800"
+            >
+              Escolher meu primeiro livro
+            </Link>
+          </div>
         </div>
       )}
     </div>
