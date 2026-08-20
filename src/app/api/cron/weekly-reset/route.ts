@@ -2,8 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { runWeeklyLeagueReset } from "@/lib/gamification/league";
 
 export async function GET(req: NextRequest) {
+  const secret = process.env.CRON_SECRET;
   const auth = req.headers.get("authorization");
-  if (auth !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (!secret || auth !== `Bearer ${secret}`) {
     return NextResponse.json({ error: "Não autorizado." }, { status: 401 });
   }
 
