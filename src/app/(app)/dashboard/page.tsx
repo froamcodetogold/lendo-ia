@@ -56,7 +56,7 @@ export default async function DashboardPage() {
           </div>
           <Link
             href={`/checkin?goalId=${activeGoal.id}`}
-            className="mt-5 inline-block rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-800"
+            className="mt-5 inline-block rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700"
           >
             Fazer check-in de hoje
           </Link>
@@ -107,7 +107,7 @@ export default async function DashboardPage() {
           <div className="border-t border-neutral-100 p-6 text-center">
             <Link
               href="/onboarding"
-              className="inline-block rounded-lg bg-neutral-900 px-5 py-2.5 font-medium text-white hover:bg-neutral-800"
+              className="inline-block rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white hover:bg-indigo-700"
             >
               Escolher meu primeiro livro
             </Link>

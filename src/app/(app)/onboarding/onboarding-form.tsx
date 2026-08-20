@@ -104,7 +104,7 @@ export function OnboardingForm() {
             type="button"
             onClick={createGoal}
             disabled={submitting}
-            className="rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+            className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
           >
             {submitting ? "Criando..." : "Começar a ler"}
           </button>
@@ -132,7 +132,7 @@ export function OnboardingForm() {
         <button
           type="submit"
           disabled={searching}
-          className="rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+          className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
         >
           {searching ? "Buscando..." : "Buscar"}
         </button>

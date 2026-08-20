@@ -87,7 +87,7 @@ export function CheckInFlow() {
             router.push("/dashboard");
             router.refresh();
           }}
-          className="mt-5 rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-800"
+          className="mt-5 rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700"
         >
           Voltar pro painel
         </button>
@@ -106,7 +106,7 @@ export function CheckInFlow() {
                 <label
                   key={oi}
                   className={`flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 ${
-                    answers[qi] === oi ? "border-neutral-900 bg-neutral-50" : "border-neutral-200"
+                    answers[qi] === oi ? "border-indigo-600 bg-indigo-50" : "border-neutral-200"
                   }`}
                 >
                   <input
@@ -125,7 +125,7 @@ export function CheckInFlow() {
         <button
           onClick={submitQuiz}
           disabled={loading}
-          className="rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+          className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
         >
           {loading ? "Enviando..." : "Enviar respostas"}
         </button>
@@ -151,7 +151,7 @@ export function CheckInFlow() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-lg bg-neutral-900 px-4 py-2 font-medium text-white hover:bg-neutral-800 disabled:opacity-50"
+          className="rounded-lg bg-indigo-600 px-4 py-2 font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
         >
           {loading ? "Gerando quiz..." : "Confirmar leitura"}
         </button>

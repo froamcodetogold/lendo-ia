@@ -28,7 +28,7 @@ export default async function RankingPage() {
           <li
             key={u.id}
             className={`flex items-center gap-3 rounded-xl border p-3 ${
-              u.id === user.id ? "border-neutral-900 bg-neutral-50" : "border-neutral-200 bg-white"
+              u.id === user.id ? "border-indigo-600 bg-indigo-50" : "border-neutral-200 bg-white"
             }`}
           >
             <span className="w-6 text-center font-bold text-neutral-400">{i + 1}</span>

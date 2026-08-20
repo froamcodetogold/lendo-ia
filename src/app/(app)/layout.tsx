@@ -18,7 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <header className="border-b border-neutral-200 bg-white">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-6 py-3">
           <Link href="/dashboard" className="font-bold">
-            Lendo.IA
+            Lendo<span className="text-indigo-600">.IA</span>
           </Link>
           <nav className="flex items-center gap-4 text-sm">
             {NAV.map((item) => (
