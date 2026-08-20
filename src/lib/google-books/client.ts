@@ -16,7 +16,10 @@ export async function searchBooks(query: string): Promise<GoogleBookResult[]> {
   if (apiKey) url.searchParams.set("key", apiKey);
 
   const res = await fetch(url, { next: { revalidate: 60 * 60 } });
-  if (!res.ok) throw new Error(`Google Books API respondeu ${res.status}`);
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(`Google Books API respondeu ${res.status}: ${body.slice(0, 500)}`);
+  }
 
   const data = (await res.json()) as {
     items?: Array<{
