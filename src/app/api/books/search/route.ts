@@ -18,10 +18,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ results });
   } catch (error) {
     console.error("books_search_failed", error);
-    const debug = error instanceof Error ? error.message : String(error);
-    return NextResponse.json(
-      { error: "Não foi possível buscar livros.", debug, hasKey: Boolean(process.env.GOOGLE_BOOKS_API_KEY) },
-      { status: 502 }
-    );
+    return NextResponse.json({ error: "Não foi possível buscar livros." }, { status: 502 });
   }
 }
