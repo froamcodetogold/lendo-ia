@@ -7,6 +7,13 @@ export type GoogleBookResult = {
   description: string | null;
 };
 
+async function fetchVolumes(url: URL) {
+  // cache: "no-store" — o fetch estendido do Next.js guarda respostas de erro
+  // junto com as de sucesso; sem isso, uma falha temporária ficava "presa"
+  // em cache por horas pra aquela busca específica.
+  return fetch(url, { cache: "no-store" });
+}
+
 export async function searchBooks(query: string): Promise<GoogleBookResult[]> {
   const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
   const url = new URL("https://www.googleapis.com/books/v1/volumes");
@@ -15,10 +22,13 @@ export async function searchBooks(query: string): Promise<GoogleBookResult[]> {
   url.searchParams.set("langRestrict", "pt-BR");
   if (apiKey) url.searchParams.set("key", apiKey);
 
-  // cache: "no-store" — o fetch estendido do Next.js armazena respostas de erro
-  // junto com as de sucesso; sem isso, uma falha temporária (chave inválida,
-  // rate limit) ficava "presa" em cache por horas pra aquela busca específica.
-  const res = await fetch(url, { cache: "no-store" });
+  let res = await fetchVolumes(url);
+  // O backend do Google Books tem instabilidade ocasional (503) — vale uma
+  // segunda tentativa antes de desistir, já que costuma passar na próxima.
+  if (res.status >= 500) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    res = await fetchVolumes(url);
+  }
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(`Google Books API respondeu ${res.status}: ${body.slice(0, 500)}`);
