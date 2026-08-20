@@ -96,7 +96,7 @@ export default async function LoginPage({
       </p>
 
       <div className="mt-4 font-mono text-xs text-slate-600">
-        From Code to Gold &bull; Lendo.IA Engine
+        FC2G &bull; Lendo.IA Engine
       </div>
     </main>
   );
