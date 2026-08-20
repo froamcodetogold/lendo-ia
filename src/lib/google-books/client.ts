@@ -1,0 +1,44 @@
+export type GoogleBookResult = {
+  googleBooksId: string;
+  title: string;
+  authors: string[];
+  thumbnailUrl: string | null;
+  pageCount: number | null;
+  description: string | null;
+};
+
+export async function searchBooks(query: string): Promise<GoogleBookResult[]> {
+  const apiKey = process.env.GOOGLE_BOOKS_API_KEY;
+  const url = new URL("https://www.googleapis.com/books/v1/volumes");
+  url.searchParams.set("q", query);
+  url.searchParams.set("maxResults", "10");
+  url.searchParams.set("langRestrict", "pt-BR");
+  if (apiKey) url.searchParams.set("key", apiKey);
+
+  const res = await fetch(url, { next: { revalidate: 60 * 60 } });
+  if (!res.ok) throw new Error(`Google Books API respondeu ${res.status}`);
+
+  const data = (await res.json()) as {
+    items?: Array<{
+      id: string;
+      volumeInfo?: {
+        title?: string;
+        authors?: string[];
+        pageCount?: number;
+        description?: string;
+        imageLinks?: { thumbnail?: string };
+      };
+    }>;
+  };
+
+  return (data.items ?? [])
+    .filter((item) => item.volumeInfo?.title)
+    .map((item) => ({
+      googleBooksId: item.id,
+      title: item.volumeInfo!.title!,
+      authors: item.volumeInfo?.authors ?? [],
+      thumbnailUrl: item.volumeInfo?.imageLinks?.thumbnail?.replace("http://", "https://") ?? null,
+      pageCount: item.volumeInfo?.pageCount ?? null,
+      description: item.volumeInfo?.description ?? null,
+    }));
+}

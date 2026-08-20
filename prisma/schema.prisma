@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ---------- Modelos exigidos pelo NextAuth (Prisma Adapter) ----------
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ---------- Domínio do app ----------
+
+enum League {
+  INICIANTE
+  PRATA
+  OURO
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  ABANDONED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+
+  // Gamificação
+  xpTotal       Int       @default(0)
+  xpWeekly      Int       @default(0) // zerado toda segunda pelo job de reset
+  currentStreak Int       @default(0)
+  longestStreak Int       @default(0)
+  lastCheckInAt DateTime?
+  league        League    @default(INICIANTE)
+
+  // Indique e ganhe
+  referralCode     String     @unique @default(cuid())
+  referralsGiven   Referral[] @relation("ReferrerRelation")
+  referralReceived Referral?  @relation("ReferredRelation")
+
+  accounts     Account[]
+  sessions     Session[]
+  readingGoals ReadingGoal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([xpWeekly])
+  @@index([league])
+}
+
+model Book {
+  // Cache local dos metadados vindos do Google Books — evita rechamar a API
+  // toda vez e dá uma FK estável pra ReadingGoal.
+  id            String   @id @default(cuid())
+  googleBooksId String   @unique
+  title         String
+  authors       String[]
+  thumbnailUrl  String?
+  pageCount     Int?
+  description   String?  @db.Text
+
+  readingGoals ReadingGoal[]
+  createdAt    DateTime      @default(now())
+}
+
+model ReadingGoal {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookId String
+  book   Book   @relation(fields: [bookId], references: [id])
+
+  totalPages    Int
+  startDate     DateTime   @default(now())
+  targetDate    DateTime
+  dailyPageGoal Int // calculado no onboarding: totalPages / dias disponíveis
+  currentPage   Int        @default(0)
+  status        GoalStatus @default(ACTIVE)
+
+  checkIns CheckIn[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, status])
+}
+
+model CheckIn {
+  id            String      @id @default(cuid())
+  readingGoalId String
+  readingGoal   ReadingGoal @relation(fields: [readingGoalId], references: [id], onDelete: Cascade)
+
+  pageFrom    Int
+  pageTo      Int
+  pagesRead   Int
+  checkInDate DateTime @db.Date // só a data, sem hora — facilita streak e unicidade diária
+
+  quizQuestions Json // [{question, options[4], correctIndex}] gerado pelo Gemini
+  quizAnswers   Json? // respostas do usuário
+  quizScore     Int   @default(0) // 0–3 acertos
+  xpEarned      Int   @default(0)
+
+  createdAt DateTime @default(now())
+
+  @@unique([readingGoalId, checkInDate]) // 1 check-in por meta por dia — evita farm de XP
+  @@index([checkInDate])
+}
+
+model Referral {
+  id String @id @default(cuid())
+
+  referrerId String
+  referrer   User   @relation("ReferrerRelation", fields: [referrerId], references: [id], onDelete: Cascade)
+
+  referredId String @unique // 1 pessoa só pode ter sido indicada 1 vez
+  referred   User   @relation("ReferredRelation", fields: [referredId], references: [id], onDelete: Cascade)
+
+  bonusXpAwarded Boolean   @default(false) // vira true só no 1º check-in do indicado
+  bonusAwardedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@index([referrerId])
+}
