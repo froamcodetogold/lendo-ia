@@ -89,7 +89,13 @@ export default async function LoginPage({
         </div>
       </div>
 
-      <div className="mt-6 font-mono text-xs text-slate-600">
+      <p className="mt-6 max-w-md text-center text-xs leading-relaxed text-slate-500">
+        O brasileiro lê, em média, 4 vezes menos que o resto do mundo. O Lendo.IA nasceu
+        pra tentar virar esse jogo — usando IA e gamificação pra tornar o hábito de ler e
+        estudar mais leve e consistente, um check-in de cada vez.
+      </p>
+
+      <div className="mt-4 font-mono text-xs text-slate-600">
         From Code to Gold &bull; Lendo.IA Engine
       </div>
     </main>
