@@ -1,6 +1,9 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ReferralLink } from "./referral-link";
+import { ProfileEditForm } from "./profile-edit-form";
+import { DeleteAccount } from "./delete-account";
+import { XP_LABELS } from "@/lib/xp-label";
 
 export default async function PerfilPage() {
   const session = await auth();
@@ -9,8 +12,11 @@ export default async function PerfilPage() {
     select: {
       name: true,
       email: true,
+      image: true,
+      bio: true,
       referralCode: true,
       xpTotal: true,
+      xpLabel: true,
       longestStreak: true,
       _count: { select: { referralsGiven: true } },
     },
@@ -24,14 +30,33 @@ export default async function PerfilPage() {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold">{user.name}</h1>
-        <p className="text-neutral-600">{user.email}</p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="flex items-center gap-4">
+          {user.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={user.image} alt="" className="h-16 w-16 rounded-full object-cover" />
+          ) : (
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-neutral-200 text-xl font-bold text-neutral-500">
+              {(user.name ?? "?").charAt(0).toUpperCase()}
+            </div>
+          )}
+          <div>
+            <h1 className="text-2xl font-bold">{user.name}</h1>
+            <p className="text-neutral-600">{user.email}</p>
+            {user.bio && <p className="mt-1 max-w-md text-sm text-neutral-600">{user.bio}</p>}
+          </div>
+        </div>
+        <ProfileEditForm
+          name={user.name ?? ""}
+          bio={user.bio ?? ""}
+          image={user.image ?? ""}
+          xpLabel={user.xpLabel}
+        />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-neutral-200 bg-white p-4">
-          <p className="text-sm text-neutral-500">XP total</p>
+          <p className="text-sm text-neutral-500">{XP_LABELS[user.xpLabel]}</p>
           <p className="text-xl font-bold">{user.xpTotal}</p>
         </div>
         <div className="rounded-xl border border-neutral-200 bg-white p-4">
@@ -75,6 +100,13 @@ export default async function PerfilPage() {
             </div>
           ))}
           {goals.length === 0 && <p className="text-neutral-500">Nenhuma leitura ainda.</p>}
+        </div>
+      </div>
+
+      <div className="border-t border-neutral-200 pt-6">
+        <h2 className="font-bold text-red-700">Zona de perigo</h2>
+        <div className="mt-3">
+          <DeleteAccount />
         </div>
       </div>
     </div>

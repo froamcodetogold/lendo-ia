@@ -60,16 +60,25 @@ enum GoalStatus {
   ABANDONED
 }
 
+enum XpLabel {
+  XP_TOTAL
+  AURA_FARMADA
+  PONTOS_DE_LEITURA
+  MANA_LITERARIA
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  bio           String?   @db.Text
 
   // Gamificação
   xpTotal       Int       @default(0)
   xpWeekly      Int       @default(0) // zerado toda segunda pelo job de reset
+  xpLabel       XpLabel   @default(XP_TOTAL)
   currentStreak Int       @default(0)
   longestStreak Int       @default(0)
   lastCheckInAt DateTime?

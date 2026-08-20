@@ -1,0 +1,6 @@
+-- CreateEnum
+CREATE TYPE "XpLabel" AS ENUM ('XP_TOTAL', 'AURA_FARMADA', 'PONTOS_DE_LEITURA', 'MANA_LITERARIA');
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "bio" TEXT,
+ADD COLUMN     "xpLabel" "XpLabel" NOT NULL DEFAULT 'XP_TOTAL';

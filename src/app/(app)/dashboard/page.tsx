@@ -6,10 +6,12 @@ import { StreakBadge } from "@/components/gamification/streak-badge";
 import { XpBar } from "@/components/gamification/xp-bar";
 import { LeagueBadge } from "@/components/gamification/league-badge";
 import { ClaimReferral } from "@/components/claim-referral";
+import { XP_LABELS } from "@/lib/xp-label";
 
 export default async function DashboardPage() {
   const session = await auth();
   const user = await prisma.user.findUniqueOrThrow({ where: { id: session!.user.id } });
+  const xpLabel = XP_LABELS[user.xpLabel];
 
   const activeGoal = await prisma.readingGoal.findFirst({
     where: { userId: user.id, status: "ACTIVE" },
@@ -30,7 +32,7 @@ export default async function DashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
-          <XpBar xp={user.xpTotal} label="XP total" />
+          <XpBar xp={user.xpTotal} label={xpLabel} />
         </div>
         <div className="rounded-xl border border-neutral-200 bg-white p-5">
           <XpBar xp={user.xpWeekly} label="XP nesta semana" />
