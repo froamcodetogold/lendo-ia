@@ -15,7 +15,10 @@ export async function searchBooks(query: string): Promise<GoogleBookResult[]> {
   url.searchParams.set("langRestrict", "pt-BR");
   if (apiKey) url.searchParams.set("key", apiKey);
 
-  const res = await fetch(url, { next: { revalidate: 60 * 60 } });
+  // cache: "no-store" — o fetch estendido do Next.js armazena respostas de erro
+  // junto com as de sucesso; sem isso, uma falha temporária (chave inválida,
+  // rate limit) ficava "presa" em cache por horas pra aquela busca específica.
+  const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
     throw new Error(`Google Books API respondeu ${res.status}: ${body.slice(0, 500)}`);
