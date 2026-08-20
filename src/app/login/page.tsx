@@ -25,9 +25,9 @@ export default async function LoginPage({
             <BookOpen className="size-7" />
           </div>
 
-          <h1 className="flex items-center justify-center gap-2 text-3xl font-bold tracking-tight text-white">
+          <h1 className="flex items-center justify-center gap-2 text-4xl font-bold tracking-tight text-white">
             Lendo<span className="text-indigo-400">.IA</span>
-            <Sparkles className="size-5 animate-pulse text-amber-400" />
+            <Sparkles className="size-6 animate-pulse text-amber-400" />
           </h1>
 
           <p className="mt-2 text-sm text-slate-400">
